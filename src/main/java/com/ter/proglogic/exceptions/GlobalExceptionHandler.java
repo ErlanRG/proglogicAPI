@@ -12,7 +12,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DuplicateValueException.class)
     public ResponseEntity<ErrorObject> handleDuplicateValueException(DuplicateValueException ex) {
         HttpStatus conflict = HttpStatus.CONFLICT;
-        ErrorObject errorObject = new ErrorObject(conflict.value(), ex.getMessage(), new Date());
+        ErrorObject errorObject = new ErrorObject(ex.getClass().getSimpleName(), conflict.value(), ex.getMessage(), new Date());
 
         return new ResponseEntity<>(errorObject, conflict);
     }
@@ -20,7 +20,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MissingArgumentException.class)
     public ResponseEntity<ErrorObject> handleMissingArgumentException(MissingArgumentException ex) {
         HttpStatus badRequest = HttpStatus.BAD_REQUEST;
-        ErrorObject errorObject = new ErrorObject(badRequest.value(), ex.getMessage(), new Date());
+        ErrorObject errorObject = new ErrorObject(ex.getClass().getSimpleName(), badRequest.value(), ex.getMessage(), new Date());
 
         return new ResponseEntity<>(errorObject, badRequest);
     }
@@ -28,7 +28,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidAnnualReviewException.class)
     public ResponseEntity<ErrorObject> handleInvalidAnnualReviewException(InvalidAnnualReviewException ex) {
         HttpStatus badRequest = HttpStatus.BAD_REQUEST;
-        ErrorObject errorObject = new ErrorObject(badRequest.value(), ex.getMessage(), new Date());
+        ErrorObject errorObject = new ErrorObject(ex.getClass().getSimpleName(), badRequest.value(), ex.getMessage(), new Date());
 
         return new ResponseEntity<>(errorObject, badRequest);
     }
@@ -36,7 +36,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorObject> handleNotFoundException(NotFoundException ex) {
         HttpStatus notFound = HttpStatus.NOT_FOUND;
-        ErrorObject errorObject = new ErrorObject(notFound.value(), ex.getMessage(), new Date());
+        ErrorObject errorObject = new ErrorObject(ex.getClass().getSimpleName(), notFound.value(), ex.getMessage(), new Date());
 
         return new ResponseEntity<>(errorObject, notFound);
     }

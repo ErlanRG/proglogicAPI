@@ -3,6 +3,7 @@ package com.ter.proglogic.exceptions;
 import java.util.Date;
 
 public class ErrorObject {
+    private String exceptionName;
     private Integer statusCode;
     private String errorMessage;
     private Date timestamp;
@@ -10,10 +11,19 @@ public class ErrorObject {
     public ErrorObject() {
     }
 
-    public ErrorObject(Integer statusCode, String errorMessage, Date timestamp) {
+    public ErrorObject(String exceptionName, Integer statusCode, String errorMessage, Date timestamp) {
+        this.exceptionName = exceptionName;
         this.statusCode = statusCode;
         this.errorMessage = errorMessage;
         this.timestamp = timestamp;
+    }
+
+    public String getExceptionName() {
+        return exceptionName;
+    }
+
+    public void setExceptionName(String exceptionName) {
+        this.exceptionName = exceptionName;
     }
 
     public Integer getStatusCode() {
