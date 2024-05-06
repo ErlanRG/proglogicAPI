@@ -85,4 +85,17 @@ public class DeviceFamilyService {
             throw new NotFoundException("PLD type not found");
         }
     }
+
+    public DeviceFamily getDeviceByPartNumber(String partNumber) {
+        if (partNumber == null || partNumber.isEmpty()) {
+            throw new MissingArgumentException("Part number is required");
+        }
+
+        Optional<DeviceFamily> existingDevice = deviceFamilyRepository.findDeviceFamilyByPartNumber(partNumber);
+        if (existingDevice.isEmpty()) {
+            throw new NotFoundException("Device not found");
+        }
+
+        return existingDevice.get();
+    }
 }

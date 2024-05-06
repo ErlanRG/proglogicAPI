@@ -11,4 +11,7 @@ import java.util.Optional;
 public interface DeviceFamilyRepository extends JpaRepository<DeviceFamily, Long> {
     @Query("SELECT d FROM DeviceFamily d WHERE d.familyName = ?1")
     Optional<DeviceFamily> findDeviceFamilyByFamilyName(String familyName);
+
+    @Query("SELECT d FROM DeviceFamily d WHERE LEFT(?1, LENGTH(d.familyPrefix)) = d.familyPrefix")
+    Optional<DeviceFamily> findDeviceFamilyByPartNumber(String partNumber);
 }

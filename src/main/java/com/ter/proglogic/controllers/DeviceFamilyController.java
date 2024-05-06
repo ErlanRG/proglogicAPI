@@ -26,4 +26,9 @@ public class DeviceFamilyController {
     public void addDevice(@RequestBody DeviceFamily deviceFamily) {
         deviceFamilyService.addNewDevice(deviceFamily);
     }
+
+    @GetMapping("/{partNumber}")
+    public DeviceFamily getDeviceFamilyByPartNumber(@PathVariable String partNumber) {
+        return deviceFamilyService.getDeviceByPartNumber(partNumber);
+    }
 }
