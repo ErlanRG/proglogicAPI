@@ -1,0 +1,8 @@
+# Use this as a template for your application.properties
+# Replace after the '=' with your information
+
+spring.datasource.url=<STRING_CONNECTION>
+spring.datasource.username=<USERNAME>
+spring.datasource.password=<PASSWORD>
+spring.datasource.driver-class-name=<DRIVE_CLASS_NAME>
+spring.jpa.hibernate.ddl-auto=update
