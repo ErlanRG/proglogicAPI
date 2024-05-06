@@ -16,6 +16,7 @@ public class DeviceFamily {
     private Supplier supplier;
 
     private String familyName;
+    private String familyPrefix;
 
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "pld_type_id", referencedColumnName = "pld_type_id")
@@ -44,10 +45,11 @@ public class DeviceFamily {
     public DeviceFamily() {
     }
 
-    public DeviceFamily(Long deviceFamilyId, Supplier supplier, String familyName, PldType pldType, LifecyclePhase lifecyclePhase, TerStatus status, Integer yearIntroduced, Integer nextAnnualReview, String notes) {
+    public DeviceFamily(Long deviceFamilyId, Supplier supplier, String familyName, String familyPrefix, PldType pldType, LifecyclePhase lifecyclePhase, TerStatus status, Integer yearIntroduced, Integer nextAnnualReview, String notes) {
         this.deviceFamilyId = deviceFamilyId;
         this.supplier = supplier;
         this.familyName = familyName;
+        this.familyPrefix = familyPrefix;
         this.pldType = pldType;
         this.lifecyclePhase = lifecyclePhase;
         this.status = status;
@@ -78,6 +80,14 @@ public class DeviceFamily {
 
     public void setFamilyName(String familyName) {
         this.familyName = familyName;
+    }
+
+    public String getFamilyPrefix() {
+        return familyPrefix;
+    }
+
+    public void setFamilyPrefix(String familyPrefix) {
+        this.familyPrefix = familyPrefix;
     }
 
     public PldType getPldType() {
@@ -133,7 +143,7 @@ public class DeviceFamily {
     public Integer getYearsToEol() {
         LocalDate today = LocalDate.now();
         int currentYear = today.getYear();
-        return this.nextAnnualReview - currentYear;
+        return Math.max(this.nextAnnualReview - currentYear, 0);
     }
 
     public void setYearsToEol(Integer yearsToEol) {
@@ -152,4 +162,5 @@ public class DeviceFamily {
     public String toString() {
         return "DeviceFamily{" + "deviceFamilyId=" + deviceFamilyId + ", supplier=" + supplier + ", familyName='" + familyName + '\'' + ", pldType=" + pldType + ", lifecyclePhase=" + lifecyclePhase + ", status=" + status + ", yearIntroduced=" + yearIntroduced + ", yearsInProduction=" + yearsInProduction + ", nextAnnualReview=" + nextAnnualReview + ", yearsToEol=" + yearsToEol + ", notes='" + notes + '\'' + '}';
     }
+
 }
