@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class DeviceFamilyService {
@@ -40,12 +39,11 @@ public class DeviceFamilyService {
         String deviceFamilyNameUppercase = deviceFamily.getFamilyName().toUpperCase();
         deviceFamily.setFamilyName(deviceFamilyNameUppercase);
 
-        Optional<DeviceFamily> existingDevice = deviceFamilyRepository.findDeviceFamilyByFamilyName(deviceFamily.getFamilyName());
-        if (existingDevice.isPresent()) {
-            throw new DuplicateValueException("The device family already exists");
-        } else {
-            deviceFamilyRepository.save(deviceFamily);
-        }
+        deviceFamilyRepository.findDeviceFamilyByFamilyName(deviceFamilyNameUppercase).ifPresent(existingDevice -> {
+            throw new DuplicateValueException("Can't add the new device. Device family already exists");
+        });
+
+        deviceFamilyRepository.save(deviceFamily);
     }
 
     private void validateDeviceFamily(DeviceFamily deviceFamily) {
@@ -74,16 +72,14 @@ public class DeviceFamilyService {
         }
 
         // Search for the supplier by name
-        Optional<Supplier> existingSupplier = supplierRepository.findSupplierBySupplierName(supplier.getSupplierName());
-        if (existingSupplier.isEmpty()) {
+        supplierRepository.findSupplierBySupplierName(supplier.getSupplierName()).ifPresent(existingSupplier -> {
             throw new NotFoundException("Supplier not found");
-        }
+        });
 
         // Search for the PLD type by name
-        Optional<PldType> existingPldType = pldTypeRepository.findPldTypeByPldTypeName(pldType.getPldTypeName());
-        if (existingPldType.isEmpty()) {
+        pldTypeRepository.findPldTypeByPldTypeName(pldType.getPldTypeName()).ifPresent(existingPld -> {
             throw new NotFoundException("PLD type not found");
-        }
+        });
     }
 
     public DeviceFamily getDeviceByPartNumber(String partNumber) {
@@ -91,11 +87,6 @@ public class DeviceFamilyService {
             throw new MissingArgumentException("Part number is required");
         }
 
-        Optional<DeviceFamily> existingDevice = deviceFamilyRepository.findDeviceFamilyByPartNumber(partNumber);
-        if (existingDevice.isEmpty()) {
-            throw new NotFoundException("Device not found");
-        }
-
-        return existingDevice.get();
+        return deviceFamilyRepository.findDeviceFamilyByPartNumber(partNumber).orElseThrow(() -> new NotFoundException("Device not found"));
     }
 }

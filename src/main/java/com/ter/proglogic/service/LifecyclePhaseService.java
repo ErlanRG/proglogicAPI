@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class LifecyclePhaseService {
@@ -24,18 +23,17 @@ public class LifecyclePhaseService {
     }
 
     public void addNewLifecyclePhase(LifecyclePhase lifecyclePhase) {
-        if (!lifecyclePhase.getLifecycleName().isEmpty()) {
-            String lifecycleNameUppercase = lifecyclePhase.getLifecycleName().toUpperCase();
-            lifecyclePhase.setLifecycleName(lifecycleNameUppercase);
-        } else {
+        if (lifecyclePhase.getLifecycleName() == null || lifecyclePhase.getLifecycleName().isEmpty()) {
             throw new MissingArgumentException("Missing lifecycle name");
         }
 
-        Optional<LifecyclePhase> existingLifecyclePhase = lifecyclePhaseRepository.findLifecyclePhaseByLifecycleName(lifecyclePhase.getLifecycleName());
-        if (existingLifecyclePhase.isPresent()) {
+        String lifecycleNameUppercase = lifecyclePhase.getLifecycleName().toUpperCase();
+        lifecyclePhase.setLifecycleName(lifecycleNameUppercase);
+
+        lifecyclePhaseRepository.findLifecyclePhaseByLifecycleName(lifecycleNameUppercase).ifPresent(existingLifecyclePhase -> {
             throw new DuplicateValueException("Lifecycle phase already exists");
-        } else {
-            lifecyclePhaseRepository.save(lifecyclePhase);
-        }
+        });
+
+        lifecyclePhaseRepository.save(lifecyclePhase);
     }
 }

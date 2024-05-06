@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PldTypeService {
@@ -24,19 +23,17 @@ public class PldTypeService {
     }
 
     public void addNewPldType(PldType pldType) {
-        if (!pldType.getPldTypeName().isEmpty()) {
-            String pldTypeNameUppercase = pldType.getPldTypeName().toUpperCase();
-            pldType.setPldTypeName(pldTypeNameUppercase);
-        } else {
+        if (pldType.getPldTypeName() == null || pldType.getPldTypeName().isEmpty()) {
             throw new MissingArgumentException("Missing PLD type name");
         }
 
-        Optional<PldType> existingPldType = pldTypeRepository.findPldTypeByPldTypeName(pldType.getPldTypeName());
+        String pldTypeNameUppercase = pldType.getPldTypeName().toUpperCase();
+        pldType.setPldTypeName(pldTypeNameUppercase);
 
-        if (existingPldType.isPresent()) {
+        pldTypeRepository.findPldTypeByPldTypeName(pldTypeNameUppercase).ifPresent(existingPld -> {
             throw new DuplicateValueException("PLD type already exists");
-        } else {
-            pldTypeRepository.save(pldType);
-        }
+        });
+
+        pldTypeRepository.save(pldType);
     }
 }

@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TerStatusService {
@@ -24,18 +23,17 @@ public class TerStatusService {
     }
 
     public void addNewStatus(TerStatus terStatus) {
-        if (!terStatus.getStatus_name().isEmpty()) {
-            String statusNameUppercase = terStatus.getStatus_name().toUpperCase();
-            terStatus.setStatus_name(statusNameUppercase);
-        } else {
+        if (terStatus.getStatus_name() == null || terStatus.getStatus_name().isEmpty()) {
             throw new MissingArgumentException("Missing status name");
         }
 
-        Optional<TerStatus> existingStatus = terStatusRepository.findTerStatusByStatusName(terStatus.getStatus_name());
-        if (existingStatus.isPresent()) {
+        String statusNameUppercase = terStatus.getStatus_name().toUpperCase();
+        terStatus.setStatus_name(statusNameUppercase);
+
+        terStatusRepository.findTerStatusByStatusName(statusNameUppercase).ifPresent(existingStatus -> {
             throw new DuplicateValueException("Status already exists");
-        } else {
-            terStatusRepository.save(terStatus);
-        }
+        });
+
+        terStatusRepository.save(terStatus);
     }
 }

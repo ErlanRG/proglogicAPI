@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class SupplierService {
@@ -24,18 +23,17 @@ public class SupplierService {
     }
 
     public void addNewSupplier(Supplier supplier) {
-        if (!supplier.getSupplierName().isEmpty()) {
-            String supplierNameUppercase = supplier.getSupplierName().toUpperCase();
-            supplier.setSupplierName(supplierNameUppercase);
-        } else {
+        if (supplier.getSupplierName() == null || supplier.getSupplierName().isEmpty()) {
             throw new MissingArgumentException("Missing supplier name");
         }
 
-        Optional<Supplier> existingSupplier = supplierRepository.findSupplierBySupplierName(supplier.getSupplierName());
-        if (existingSupplier.isPresent()) {
+        String supplierNameUppercase = supplier.getSupplierName().toUpperCase();
+        supplier.setSupplierName(supplierNameUppercase);
+
+        supplierRepository.findSupplierBySupplierName(supplierNameUppercase).ifPresent(existingSupplier -> {
             throw new DuplicateValueException("Supplier already exists");
-        } else {
-            supplierRepository.save(supplier);
-        }
+        });
+
+        supplierRepository.save(supplier);
     }
 }
