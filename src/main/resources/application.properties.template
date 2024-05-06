@@ -1,5 +1,6 @@
 # Use this as a template for your application.properties
-# Replace after the '=' with your information
+# Remove the '.template' from the file name.
+# Replace after the '=' with your information.
 
 spring.datasource.url=<STRING_CONNECTION>
 spring.datasource.username=<USERNAME>
