@@ -72,12 +72,14 @@ public class DeviceFamilyService {
         }
 
         // Search for the supplier by name
-        supplierRepository.findSupplierBySupplierName(supplier.getSupplierName()).ifPresent(existingSupplier -> {
+        supplierRepository.findSupplierBySupplierName(supplier.getSupplierName()).ifPresentOrElse(existingSupplier -> {
+        }, () -> {
             throw new NotFoundException("Supplier not found");
         });
 
         // Search for the PLD type by name
-        pldTypeRepository.findPldTypeByPldTypeName(pldType.getPldTypeName()).ifPresent(existingPld -> {
+        pldTypeRepository.findPldTypeByPldTypeName(pldType.getPldTypeName()).ifPresentOrElse(existingPld -> {
+        }, () -> {
             throw new NotFoundException("PLD type not found");
         });
     }

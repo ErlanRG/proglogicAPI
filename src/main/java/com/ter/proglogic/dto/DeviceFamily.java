@@ -45,6 +45,18 @@ public class DeviceFamily {
     public DeviceFamily() {
     }
 
+    public DeviceFamily(Supplier supplier, String familyName, String familyPrefix, PldType pldType, LifecyclePhase lifecyclePhase, TerStatus status, Integer yearIntroduced, Integer nextAnnualReview, String notes) {
+        this.supplier = supplier;
+        this.familyName = familyName;
+        this.familyPrefix = familyPrefix;
+        this.pldType = pldType;
+        this.lifecyclePhase = lifecyclePhase;
+        this.status = status;
+        this.yearIntroduced = yearIntroduced;
+        this.nextAnnualReview = nextAnnualReview;
+        this.notes = notes;
+    }
+
     public DeviceFamily(Long deviceFamilyId, Supplier supplier, String familyName, String familyPrefix, PldType pldType, LifecyclePhase lifecyclePhase, TerStatus status, Integer yearIntroduced, Integer nextAnnualReview, String notes) {
         this.deviceFamilyId = deviceFamilyId;
         this.supplier = supplier;
