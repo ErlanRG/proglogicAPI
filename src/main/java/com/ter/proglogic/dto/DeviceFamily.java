@@ -11,22 +11,22 @@ public class DeviceFamily {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long deviceFamilyId;
 
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "supplier_id", referencedColumnName = "supplier_id")
     private Supplier supplier;
 
     private String familyName;
     private String familyPrefix;
 
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "pld_type_id", referencedColumnName = "pld_type_id")
     private PldType pldType;
 
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "lifecycle_phase_id", referencedColumnName = "lifecycle_phase_id")
     private LifecyclePhase lifecyclePhase;
 
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "status_id", referencedColumnName = "status_id")
     private TerStatus status;
 
