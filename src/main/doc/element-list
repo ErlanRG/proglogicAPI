@@ -1,0 +1,8 @@
+com.ter.proglogic
+com.ter.proglogic.configuration
+com.ter.proglogic.controllers
+com.ter.proglogic.dto
+com.ter.proglogic.exceptions
+com.ter.proglogic.repository
+com.ter.proglogic.security
+com.ter.proglogic.service

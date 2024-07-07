@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Service class for managing operations related to Device Family entities.
+ */
 @Service
 public class DeviceFamilyService {
     private final DeviceFamilyRepository deviceFamilyRepository;
@@ -19,6 +22,15 @@ public class DeviceFamilyService {
     private final LifecyclePhaseRepository lifecyclePhaseRepository;
     private final TerStatusRepository terStatusRepository;
 
+    /**
+     * Constructor for initializing DeviceFamilyService with repositories.
+     *
+     * @param deviceFamilyRepository   repository for DeviceFamily entities
+     * @param supplierRepository       repository for Supplier entities
+     * @param pldTypeRepository        repository for PldType entities
+     * @param lifecyclePhaseRepository repository for LifecyclePhase entities
+     * @param terStatusRepository      repository for TerStatus entities
+     */
     @Autowired
     public DeviceFamilyService(DeviceFamilyRepository deviceFamilyRepository, SupplierRepository supplierRepository, PldTypeRepository pldTypeRepository, LifecyclePhaseRepository lifecyclePhaseRepository, TerStatusRepository terStatusRepository) {
         this.deviceFamilyRepository = deviceFamilyRepository;
@@ -28,18 +40,30 @@ public class DeviceFamilyService {
         this.terStatusRepository = terStatusRepository;
     }
 
+    /**
+     * Retrieves all Device Family entities.
+     *
+     * @return list of all Device Family entities
+     */
     public List<DeviceFamily> getAllDevices() {
         return deviceFamilyRepository.findAll();
     }
 
+    /**
+     * Adds a new Device Family entity.
+     *
+     * @param deviceFamily the Device Family entity to add
+     * @throws DuplicateValueException      if the Device Family already exists
+     * @throws MissingArgumentException     if any required argument is missing
+     * @throws InvalidAnnualReviewException if the next annual review is invalid
+     * @throws NotFoundException            if any referenced entity (Supplier, PLD Type, Lifecycle Phase, TerStatus) is not found
+     */
     public void addNewDevice(DeviceFamily deviceFamily) {
         validateDeviceFamily(deviceFamily);
 
-        // Device family to uppercase
+        // Device family name and prefix to uppercase
         deviceFamily.setFamilyName(deviceFamily.getFamilyName().toUpperCase());
-
-        // Family prefix to uppercase
-        deviceFamily.setFamilyName(deviceFamily.getFamilyPrefix().toUpperCase());
+        deviceFamily.setFamilyPrefix(deviceFamily.getFamilyPrefix().toUpperCase());
 
         deviceFamilyRepository.findDeviceFamilyByFamilyName(deviceFamily.getFamilyName()).ifPresent(existingDevice -> {
             throw new DuplicateValueException("Can't add the new device. Device family already exists");
@@ -48,6 +72,14 @@ public class DeviceFamilyService {
         deviceFamilyRepository.save(deviceFamily);
     }
 
+    /**
+     * Validates a Device Family entity.
+     *
+     * @param deviceFamily the Device Family entity to validate
+     * @throws MissingArgumentException     if any required argument is missing
+     * @throws InvalidAnnualReviewException if the next annual review is invalid
+     * @throws NotFoundException            if any referenced entity (Supplier, PLD Type, Lifecycle Phase, TerStatus) is not found
+     */
     private void validateDeviceFamily(DeviceFamily deviceFamily) {
         // Validate that the family name is not empty
         String familyName = deviceFamily.getFamilyName();
@@ -67,11 +99,13 @@ public class DeviceFamilyService {
             throw new MissingArgumentException("PLD type is required");
         }
 
+        // Validate that the lifecycle phase is not null
         LifecyclePhase lifecycle = deviceFamily.getLifecyclePhase();
         if (lifecycle == null) {
             throw new MissingArgumentException("Lifecycle phase is required");
         }
 
+        // Validate that the TerStatus is not null
         TerStatus terStatus = deviceFamily.getStatus();
         if (terStatus == null) {
             throw new MissingArgumentException("TerStatus is required");
@@ -102,6 +136,14 @@ public class DeviceFamilyService {
         });
     }
 
+    /**
+     * Retrieves a Device Family entity by its part number.
+     *
+     * @param partNumber the part number of the Device Family to retrieve
+     * @return the Device Family entity
+     * @throws MissingArgumentException if the part number is missing
+     * @throws NotFoundException        if the Device Family with the given part number is not found
+     */
     public DeviceFamily getDeviceByPartNumber(String partNumber) {
         if (partNumber == null || partNumber.isEmpty()) {
             throw new MissingArgumentException("Part number is required");
