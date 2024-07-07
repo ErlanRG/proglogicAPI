@@ -9,6 +9,13 @@ import java.util.Optional;
 
 @Repository
 public interface TerStatusRepository extends JpaRepository<TerStatus, Long> {
+
+    /**
+     * Custom query to find a TerStatus by its status name.
+     *
+     * @param status the name of the status to search for
+     * @return an Optional containing the TerStatus if found, or empty otherwise
+     */
     @Query("SELECT ts from TerStatus ts where ts.status_name = ?1")
     Optional<TerStatus> findTerStatusByStatusName(String status);
 }
